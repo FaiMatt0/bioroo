@@ -1,0 +1,95 @@
+/* Stili per la pagina about */
+
+.about-section {
+    padding: 80px 0;
+}
+
+.about-section h1 {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.about-section h1:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--primary-color);
+    margin: 20px auto 0;
+}
+
+.about-image {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.history-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.history-timeline:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: var(--primary-color);
+}
+
+.history-item {
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.history-item:before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+}
+
+.team-member {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.team-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.team-name {
+    margin-bottom: 5px;
+}
+
+.team-role {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.values-card {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.values-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.values-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}

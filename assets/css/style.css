@@ -1,0 +1,210 @@
+/* Stili base esistenti */
+/* Stili generali */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Card prodotti */
+.card {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Pulsanti */
+.btn {
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary:hover {
+    background-color: #3a56d4;
+    border-color: #3a56d4;
+}
+
+.btn-success {
+    background-color: #38b000;
+    border-color: #38b000;
+}
+
+.btn-success:hover {
+    background-color: #2d9900;
+    border-color: #2d9900;
+}
+
+/* Form */
+.form-control:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+/* Stelle di valutazione */
+.rating-star {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fa-star-label:hover .rating-star,
+.fa-star-label:hover ~ .fa-star-label .rating-star {
+    color: #ffc107 !important;
+}
+
+/* Pagina prodotto */
+.product-image {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0.75rem 0;
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+}
+
+/* Badge del carrello */
+.badge {
+    position: relative;
+    top: -8px;
+    margin-left: -8px;
+}
+
+/* Metodi di pagamento */
+.payment-method {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.payment-method:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.payment-details {
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Stato dell'ordine */
+.order-status {
+    padding: 1rem 0;
+}
+
+.order-status-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.order-status-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 0.85rem;
+    top: 1.85rem;
+    height: calc(100% - 1.85rem);
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.order-status-item.active:not(:last-child)::after {
+    background-color: #4361ee;
+}
+
+.order-status-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-status-item.active .order-status-icon {
+    background-color: #4361ee;
+    border-color: #4361ee;
+    color: white;
+}
+
+/* Media queries base */
+@media (max-width: 767.98px) {
+    .card-img-top {
+        height: 150px;
+    }
+}
+
+/* Importa CSS di terze parti */
+@import url('vendor/bootstrap.min.css');
+@import url('vendor/fontawesome.min.css');
+@import url('vendor/datatables.min.css');
+
+/* Importa stili specifici per pagina */
+@import url('pages/home.css');
+@import url('pages/products.css');
+@import url('pages/cart.css');
+@import url('pages/checkout.css');
+@import url('pages/profile.css');
+@import url('pages/admin.css');
+@import url('pages/about.css');
+@import url('pages/contact.css');
+@import url('pages/sustainability.css');
+@import url('pages/wip.css');
+
+/* Variabili globali e utility per supportare i moduli */
+:root {
+  --primary-color: #4361ee;
+  --secondary-color: #3a56d4;
+  --success-color: #38b000;
+  --warning-color: #ffb700;
+  --danger-color: #d90429;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  
+  --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --border-radius: 4px;
+  --transition-default: all 0.3s ease;
+}
+
+/* Utility classes aggiuntive */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Media queries aggiuntive */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  /* Tablet styles */
+}
+
+@media (min-width: 992px) {
+  /* Desktop styles */
+}

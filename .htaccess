@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Imposta la directory base
+    RewriteBase /marketplace/
+    
+    # Reindirizza a index.php se il file o la directory non esistono
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

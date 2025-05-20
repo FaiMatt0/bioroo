@@ -1,0 +1,68 @@
+/* Stili per la pagina contatti */
+
+.contact-form {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.contact-form .card-body {
+    padding: 40px;
+}
+
+.contact-info {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.contact-info .card-body {
+    padding: 40px;
+}
+
+.contact-icon {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(67, 97, 238, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.contact-icon i {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.map-container {
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+    background-color: var(--secondary-color);
+}
