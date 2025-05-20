@@ -1,153 +1,54 @@
-marketplace/
-│
-├── assets/                       # Risorse statiche
-│   ├── css/                      # Fogli di stile
-│   │   ├── vendor/               # CSS di terze parti
-│   │   │   ├── bootstrap.min.css # Bootstrap CSS
-│   │   │   ├── fontawesome.min.css # Font Awesome
-│   │   │   └── datatables.min.css # DataTables
-│   │   │
-│   │   ├── pages/                # CSS specifici per pagina
-│   │   │   ├── home.css          # Stili homepage
-│   │   │   ├── products.css      # Stili pagina prodotti
-│   │   │   ├── cart.css          # Stili carrello
-│   │   │   ├── checkout.css      # Stili checkout
-│   │   │   ├── profile.css       # Stili profilo utente
-│   │   │   ├── admin.css         # Stili pannello admin
-│   │   │   ├── about.css         # Stili pagina about
-│   │   │   ├── contact.css       # Stili pagina contatti
-│   │   │   ├── sustainability.css # Stili pagina sostenibilità
-│   │   │   └── wip.css           # Stili pagina work in progress
-│   │   │
-│   │   └── style.css             # File CSS principale
-│   │
-│   ├── js/                       # Script JavaScript
-│   │   ├── vendor/               # JS di terze parti
-│   │   │   ├── jquery.min.js     # jQuery
-│   │   │   ├── bootstrap.bundle.min.js # Bootstrap JS
-│   │   │   └── datatables.min.js # DataTables
-│   │   │
-│   │   ├── modules/              # Moduli JS per funzionalità
-│   │   │   ├── cart.js           # Funzionalità carrello
-│   │   │   ├── products.js       # Funzionalità prodotti
-│   │   │   ├── checkout.js       # Funzionalità checkout
-│   │   │   ├── auth.js           # Funzionalità autenticazione
-│   │   │   ├── admin.js          # Funzionalità admin
-│   │   │   ├── home.js           # Funzionalità homepage
-│   │   │   └── contact.js        # Funzionalità pagina contatti
-│   │   │
-│   │   ├── utils/                # Utility JS
-│   │   │   ├── api.js            # Wrapper per API fetch/ajax
-│   │   │   └── formatters.js     # Funzioni di formattazione
-│   │   │
-│   │   └── main.js               # File JS principale
-│   │
-│   └── images/                   # Immagini del sito
-│       ├── logo.png              # Logo del marketplace
-│       ├── hero/                 # Immagini banner homepage
-│       │   ├── slide1.jpg
-│       │   ├── slide2.jpg
-│       │   └── slide3.jpg
-│       │
-│       ├── about/                # Immagini pagina about
-│       │   ├── company-history.jpg
-│       │   ├── team-1.jpg
-│       │   ├── team-2.jpg
-│       │   └── team-3.jpg
-│       │
-│       └── sustainability/       # Immagini pagina sostenibilità
-│           └── hero-bg.jpg
-│
-├── config/                       # File di configurazione
-│   ├── database.php              # Configurazione database
-│   └── config.php                # Configurazione generale
-│
-├── controllers/                  # Controller
-│   ├── PageController.php        # Controller pagine statiche (home, about, ecc.)
-│   ├── AuthController.php        # Gestione autenticazione
-│   ├── ProductController.php     # Gestione prodotti
-│   ├── CartController.php        # Gestione carrello
-│   ├── OrderController.php       # Gestione ordini
-│   ├── PaymentController.php     # Gestione pagamenti
-│   └── UserController.php        # Gestione utenti
-│
-├── models/                       # Model per interazione con il database
-│   ├── User.php                  # Gestione utenti
-│   ├── Product.php               # Gestione prodotti
-│   ├── Category.php              # Gestione categorie
-│   ├── Cart.php                  # Gestione carrello
-│   ├── Order.php                 # Gestione ordini
-│   ├── OrderItem.php             # Dettagli ordini
-│   ├── Payment.php               # Gestione pagamenti
-│   └── Review.php                # Gestione recensioni
-│
-├── views/                        # View (templates HTML)
-│   ├── layouts/                  # Layout principale
-│   │   ├── header.php            # Header del sito
-│   │   └── footer.php            # Footer del sito
-│   │
-│   ├── pages/                    # Pagine statiche
-│   │   ├── home.php              # Homepage
-│   │   ├── about.php             # Pagina chi siamo
-│   │   ├── contact.php           # Pagina contatti
-│   │   ├── sustainability.php    # Pagina sostenibilità
-│   │   └── wip.php               # Pagina work in progress
-│   │
-│   ├── auth/                     # Pagine di autenticazione
-│   │   ├── login.php             # Pagina login
-│   │   └── register.php          # Pagina registrazione
-│   │
-│   ├── products/                 # Pagine prodotti
-│   │   ├── index.php             # Lista prodotti
-│   │   ├── show.php              # Dettaglio prodotto
-│   │   ├── category.php          # Prodotti per categoria
-│   │   └── search.php            # Risultati ricerca
-│   │
-│   ├── cart/                     # Pagine carrello
-│   │   └── index.php             # Visualizzazione carrello
-│   │
-│   ├── checkout/                 # Pagine checkout
-│   │   └── index.php             # Form checkout
-│   │
-│   ├── payment/                  # Pagine pagamento
-│   │   ├── index.php             # Form pagamento
-│   │   └── receipt.php           # Ricevuta di pagamento
-│   │
-│   ├── orders/                   # Pagine ordini
-│   │   ├── my-orders.php         # Lista ordini utente
-│   │   └── show.php              # Dettaglio ordine
-│   │
-│   ├── user/                     # Pagine profilo utente
-│   │   ├── profile.php           # Visualizzazione profilo
-│   │   ├── edit.php              # Modifica profilo
-│   │   ├── change-password.php   # Cambio password
-│   │   └── dashboard.php         # Dashboard utente
-│   │
-│   ├── admin/                    # Pagine amministrazione
-│   │   ├── dashboard.php         # Dashboard admin
-│   │   ├── products/             # Gestione prodotti (admin)
-│   │   │   ├── index.php         # Lista prodotti
-│   │   │   ├── create.php        # Aggiungi prodotto
-│   │   │   └── edit.php          # Modifica prodotto
-│   │   │
-│   │   ├── orders/               # Gestione ordini (admin)
-│   │   │   ├── index.php         # Lista ordini
-│   │   │   └── view.php          # Dettaglio ordine
-│   │   │
-│   │   └── users/                # Gestione utenti (admin)
-│   │       └── index.php         # Lista utenti
-│   │
-│   └── errors/                   # Pagine di errore
-│       ├── 404.php               # Pagina non trovata
-│       └── 500.php               # Errore del server
-│
-├── utils/                        # Funzioni di utilità
-│   ├── helpers.php               # Funzioni helper
-│   └── validator.php             # Validazione input
-│
-├── uploads/                      # Cartella per file caricati
-│   └── products/                 # Immagini prodotti caricate
-│
-├── index.php                     # Entry point dell'applicazione
-├── .htaccess                     # Configurazione Apache
-└── README.md                     # Documentazione
+/bioro/
+├── assets/                  # Static assets
+│   ├── css/                 # CSS files
+│   │   ├── base/            # Base CSS styles
+│   │   ├── components/      # Component-specific styles
+│   │   ├── pages/           # Page-specific styles
+│   │   └── vendor/          # Third-party CSS libraries
+│   ├── js/                  # JavaScript files
+│   │   ├── modules/         # JS modules for specific pages
+│   │   ├── utils/           # Utility JS functions
+│   │   ├── vendor/          # Third-party JS libraries
+│   │   └── main.js          # Main JavaScript file
+│   └── images/              # Image assets
+├── config/                  # Configuration files
+│   ├── config.php           # Main configuration
+│   └── database.php         # Database configuration
+├── controllers/             # Controller classes
+│   ├── AuthController.php   # Authentication controller
+│   ├── CartController.php   # Shopping cart controller
+│   ├── OrderController.php  # Order management
+│   ├── PageController.php   # Static pages
+│   ├── PaymentController.php # Payment processing
+│   ├── ProductController.php # Product management
+│   └── UserController.php   # User management
+├── models/                  # Model classes
+│   ├── Cart.php             # Cart model
+│   ├── Category.php         # Category model
+│   ├── Order.php            # Order model
+│   ├── OrderItem.php        # Order items model
+│   ├── Payment.php          # Payment model
+│   ├── Product.php          # Product model
+│   ├── Review.php           # Review model
+│   └── User.php             # User model
+├── uploads/                 # User uploaded files
+│   └── products/            # Product images
+├── utils/                   # Utility functions
+│   ├── helpers.php          # Helper functions
+│   └── validator.php        # Form validation
+├── views/                   # View templates
+│   ├── admin/               # Admin panel views
+│   ├── auth/                # Authentication views
+│   ├── cart/                # Shopping cart views
+│   ├── checkout/            # Checkout views
+│   ├── errors/              # Error pages
+│   ├── layouts/             # Layout templates
+│   ├── orders/              # Order views
+│   ├── pages/               # Static page views
+│   ├── payment/             # Payment views
+│   ├── products/            # Product views
+│   └── user/                # User profile views
+├── .htaccess                # Apache configuration
+├── dbBioro.sql              # Database schema
+├── index.php                # Main entry point
+└── route-debug.php          # Routing debug tool
