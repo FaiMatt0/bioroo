@@ -1,4 +1,36 @@
-/* Stili base esistenti */
+/* style.css - Ensure other CSS files are properly imported */
+
+/* Explicitly import vendor CSS files */
+@import url('/assets/css/vendor/bootstrap.min.css');
+@import url('/assets/css/vendor/fontawesome.min.css');
+@import url('/assets/css/vendor/datatables.min.css');
+
+/* Explicitly import base CSS files */
+@import url('/assets/css/base/reset.css');
+@import url('/assets/css/base/layout.css');
+@import url('/assets/css/base/typography.css');
+@import url('/assets/css/base/colors.css');
+
+/* Explicitly import component CSS files */
+@import url('/assets/css/components/alerts.css');
+@import url('/assets/css/components/buttons.css');
+@import url('/assets/css/components/cards.css');
+@import url('/assets/css/components/forms.css');
+@import url('/assets/css/components/modals.css');
+@import url('/assets/css/components/navigation.css');
+
+/* Explicitly import page-specific CSS files */
+@import url('/assets/css/pages/home.css');
+@import url('/assets/css/pages/products.css');
+@import url('/assets/css/pages/cart.css');
+@import url('/assets/css/pages/checkout.css');
+@import url('/assets/css/pages/profile.css');
+@import url('/assets/css/pages/admin.css');
+@import url('/assets/css/pages/about.css');
+@import url('/assets/css/pages/contact.css');
+@import url('/assets/css/pages/sustainability.css');
+@import url('/assets/css/pages/wip.css');
+
 /* Stili generali */
 body {
     background-color: #f8f9fa;
@@ -160,23 +192,6 @@ footer {
         height: 150px;
     }
 }
-
-/* Importa CSS di terze parti */
-@import url('vendor/bootstrap.min.css');
-@import url('vendor/fontawesome.min.css');
-@import url('vendor/datatables.min.css');
-
-/* Importa stili specifici per pagina */
-@import url('pages/home.css');
-@import url('pages/products.css');
-@import url('pages/cart.css');
-@import url('pages/checkout.css');
-@import url('pages/profile.css');
-@import url('pages/admin.css');
-@import url('pages/about.css');
-@import url('pages/contact.css');
-@import url('pages/sustainability.css');
-@import url('pages/wip.css');
 
 /* Variabili globali e utility per supportare i moduli */
 :root {

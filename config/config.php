@@ -2,8 +2,9 @@
 // Configurazione generale dell'applicazione
 session_start();
 
-// URL base del sito
-define('BASE_URL', 'http://localhost/marketplace');  // Cambia con il tuo URL
+// URL base del sito - Make sure this is correct for your server setup
+// No trailing slash!
+define('BASE_URL', 'http://localhost/bioro/views');
 
 // Directory del progetto
 define('ROOT_PATH', dirname(__DIR__));

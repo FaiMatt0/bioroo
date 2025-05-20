@@ -1,11 +1,37 @@
+# Enable rewrite engine
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Imposta la directory base
-    RewriteBase /marketplace/
+    # Set the base directory 
+    RewriteBase /
     
-    # Reindirizza a index.php se il file o la directory non esistono
+    # Allow direct access to the assets folder
+    RewriteRule ^assets/ - [L]
+    
+    # Allow direct access to uploads folder
+    RewriteRule ^uploads/ - [L]
+    
+    # Redirect all other requests to index.php if file doesn't exist
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>
+
+# Add caching for static files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # CSS, JavaScript, and images
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+# Set the default charset
+AddDefaultCharset UTF-8
+
+# Disable directory listing
+Options -Indexes
