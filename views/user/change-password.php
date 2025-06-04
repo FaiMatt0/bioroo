@@ -1,6 +1,11 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Cambia password';
-include VIEWS_PATH . '/layouts/header.php';
+include VIEWS_PATH . '../layouts/header.php';
 ?>
 
 <nav aria-label="breadcrumb">

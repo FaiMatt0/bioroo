@@ -5,12 +5,11 @@ class Product {
     public function __construct() {
         $this->conn = getDBConnection();
     }
-    
-    /**
+      /**
      * Ottiene tutti i prodotti
      */
     public function getAll($limit = null, $offset = 0) {
-        $sql = "SELECT p.*, c.name as category_name, u.username as vendor_name 
+        $sql = "SELECT p.*, c.name as category_name, CONCAT(u.first_name, ' ', u.last_name) as vendor_name 
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 LEFT JOIN users u ON p.user_id = u.id 
@@ -35,12 +34,11 @@ class Product {
         
         return $products;
     }
-    
-    /**
+      /**
      * Ottiene prodotti per categoria
      */
     public function getByCategory($categoryId, $limit = null, $offset = 0) {
-        $sql = "SELECT p.*, c.name as category_name, u.username as vendor_name 
+        $sql = "SELECT p.*, c.name as category_name, CONCAT(u.first_name, ' ', u.last_name) as vendor_name 
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 LEFT JOIN users u ON p.user_id = u.id 
@@ -66,12 +64,11 @@ class Product {
         
         return $products;
     }
-    
-    /**
+      /**
      * Ottiene un prodotto specifico per ID
      */
     public function getById($id) {
-        $stmt = $this->conn->prepare("SELECT p.*, c.name as category_name, u.username as vendor_name 
+        $stmt = $this->conn->prepare("SELECT p.*, c.name as category_name, CONCAT(u.first_name, ' ', u.last_name) as vendor_name 
                                       FROM products p 
                                       LEFT JOIN categories c ON p.category_id = c.id 
                                       LEFT JOIN users u ON p.user_id = u.id 
@@ -91,9 +88,8 @@ class Product {
      * Ricerca prodotti
      */
     public function search($keyword) {
-        $keyword = "%{$keyword}%";
-        
-        $stmt = $this->conn->prepare("SELECT p.*, c.name as category_name, u.username as vendor_name 
+        $keyword = "%{$keyword}%";        
+        $stmt = $this->conn->prepare("SELECT p.*, c.name as category_name, CONCAT(u.first_name, ' ', u.last_name) as vendor_name 
                                       FROM products p 
                                       LEFT JOIN categories c ON p.category_id = c.id 
                                       LEFT JOIN users u ON p.user_id = u.id 
@@ -111,14 +107,14 @@ class Product {
         
         return $products;
     }
-    
-    /**
+      /**
      * Crea un nuovo prodotto
      */
     public function create($data) {
-        $stmt = $this->conn->prepare("INSERT INTO products (name, description, price, stock_quantity, category_id, user_id, image) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssdiiss", $data['name'], $data['description'], $data['price'], $data['stock_quantity'], $data['category_id'], $data['user_id'], $data['image']);
+        $stmt = $this->conn->prepare("INSERT INTO products (name, description, price, stock_quantity, category_id, user_id, image, status) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $status = $data['status'] ?? 'active';
+        $stmt->bind_param("ssdiisss", $data['name'], $data['description'], $data['price'], $data['stock_quantity'], $data['category_id'], $data['user_id'], $data['image'], $status);
         
         if ($stmt->execute()) {
             return $this->conn->insert_id;
@@ -215,5 +211,17 @@ class Product {
         }
         
         return $products;
+    }
+    
+    /**
+     * Conta il numero totale di prodotti
+     */
+    public function countProducts() {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as count FROM products");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        
+        return $row['count'];
     }
 }

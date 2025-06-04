@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../../config/config.php';
+}
+
 $pageTitle = 'Gestione Utenti';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -17,14 +22,13 @@ include VIEWS_PATH . '/layouts/header.php';
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover" id="users-table">
-                <thead>
+            <table class="table table-hover" id="users-table">                <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
                         <th>Nome</th>
                         <th>Cognome</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
                         <th>Ruolo</th>
                         <th>Data registrazione</th>
                         <th>Azioni</th>
@@ -34,10 +38,10 @@ include VIEWS_PATH . '/layouts/header.php';
                     <?php foreach ($users as $user): ?>
                         <tr>
                             <td><?= $user['id'] ?></td>
-                            <td><?= $user['username'] ?></td>
-                            <td><?= $user['email'] ?></td>
                             <td><?= $user['first_name'] ?: '-' ?></td>
                             <td><?= $user['last_name'] ?: '-' ?></td>
+                            <td><?= $user['email'] ?></td>
+                            <td><?= $user['phone'] ?: '-' ?></td>
                             <td>
                                 <?php if ($user['is_admin']): ?>
                                     <span class="badge bg-danger">Amministratore</span>
@@ -79,11 +83,10 @@ include VIEWS_PATH . '/layouts/header.php';
                                                 <h5 class="modal-title" id="changeRoleModalLabel<?= $user['id'] ?>">Cambia ruolo utente</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <form action="<?= BASE_URL ?>/admin/users/change-role" method="POST">
-                                                <div class="modal-body">
+                                            <form action="<?= BASE_URL ?>/admin/users/change-role" method="POST">                                                <div class="modal-body">
                                                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                                     
-                                                    <p>Utente: <strong><?= $user['username'] ?></strong> (<?= $user['email'] ?>)</p>
+                                                    <p>Utente: <strong><?= $user['first_name'] . ' ' . $user['last_name'] ?></strong> (<?= $user['email'] ?>)</p>
                                                     
                                                     <div class="form-check mb-3">
                                                         <input class="form-check-input" type="checkbox" id="is_admin<?= $user['id'] ?>" name="is_admin" <?= $user['is_admin'] ? 'checked' : '' ?>>

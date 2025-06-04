@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = $product['name'];
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -105,10 +110,9 @@ include VIEWS_PATH . '/layouts/header.php';
                     <p class="text-muted">Nessuna recensione ancora per questo prodotto.</p>
                 <?php else: ?>
                     <?php foreach ($reviews as $review): ?>
-                        <div class="border-bottom mb-3 pb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="border-bottom mb-3 pb-3">                            <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div>
-                                    <strong><?= $review['username'] ?></strong>
+                                    <strong><?= $review['reviewer_name'] ?></strong>
                                     <span class="text-muted ms-2"><?= date('d/m/Y', strtotime($review['created_at'])) ?></span>
                                 </div>
                                 <div>

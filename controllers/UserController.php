@@ -1,23 +1,25 @@
 <?php
 require_once MODELS_PATH . '/User.php';
 require_once MODELS_PATH . '/Order.php';
+require_once MODELS_PATH . '/Product.php';
 
 class UserController {
     private $userModel;
     private $orderModel;
+    private $productModel;
     
     public function __construct() {
         $this->userModel = new User();
         $this->orderModel = new Order();
+        $this->productModel = new Product();
     }
     
     /**
      * Mostra pagina profilo utente
-     */
-    public function profile() {
+     */    public function profile() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per visualizzare il profilo.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         $userId = $_SESSION['user_id'];
@@ -31,11 +33,10 @@ class UserController {
     
     /**
      * Mostra form per modificare il profilo
-     */
-    public function edit() {
+     */    public function edit() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per modificare il profilo.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         $userId = $_SESSION['user_id'];
@@ -46,11 +47,10 @@ class UserController {
     
     /**
      * Aggiorna il profilo
-     */
-    public function update() {
+     */    public function update() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per aggiornare il profilo.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -82,11 +82,10 @@ class UserController {
     
     /**
      * Mostra form per cambiare password
-     */
-    public function changePasswordForm() {
+     */    public function changePasswordForm() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per cambiare la password.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         include VIEWS_PATH . '/user/change-password.php';
@@ -94,11 +93,10 @@ class UserController {
     
     /**
      * Cambia password
-     */
-    public function changePassword() {
+     */    public function changePassword() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per cambiare la password.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -145,11 +143,10 @@ class UserController {
     
     /**
      * Mostra la dashboard dell'utente
-     */
-    public function dashboard() {
+     */    public function dashboard() {
         if (!isLoggedIn()) {
             setFlashMessage('error', 'Devi effettuare il login per accedere alla dashboard.');
-            redirect('/login');
+            redirect('/auth/login');
         }
         
         $userId = $_SESSION['user_id'];
@@ -160,8 +157,7 @@ class UserController {
         
         include VIEWS_PATH . '/user/dashboard.php';
     }
-    
-    /**
+      /**
      * Mostra la dashboard per admin
      */
     public function adminDashboard() {
@@ -175,6 +171,13 @@ class UserController {
         $orderCount = $this->orderModel->countOrders();
         $productCount = $this->productModel->countProducts();
         $totalRevenue = $this->orderModel->getTotalRevenue();
+        
+        // Statistiche resi
+        require_once MODELS_PATH . '/ReturnModel.php';
+        $returnModel = new ReturnModel();
+        $returnCount = $returnModel->countReturns();
+        $pendingReturnCount = $returnModel->countByStatus('requested');
+        $recentReturns = $returnModel->getAllWithDetails('', 5, 0);
         
         // Ottieni ordini recenti
         $recentOrders = $this->orderModel->getAll(10);
@@ -222,5 +225,56 @@ class UserController {
         } else {
             redirect('/admin/users');
         }
+    }
+    
+    /**
+     * Visualizza dettagli di un utente (solo admin)
+     */
+    public function viewUser($userId) {
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono visualizzare i dettagli degli utenti.');
+            redirect('/');
+        }
+        
+        $user = $this->userModel->getById($userId);
+        
+        if (!$user) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        // Ottieni statistiche utente
+        $userOrders = $this->orderModel->getByUser($userId);
+        $orderCount = count($userOrders);
+        $totalSpent = 0;
+        
+        foreach ($userOrders as $order) {
+            $totalSpent += $order['total_amount'];
+        }
+        
+        include VIEWS_PATH . '/admin/users/view.php';
+    }
+    
+    /**
+     * Visualizza ordini di un utente (solo admin)
+     */
+    public function userOrders($userId) {
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono visualizzare gli ordini degli utenti.');
+            redirect('/');
+        }
+        
+        $user = $this->userModel->getById($userId);
+        
+        if (!$user) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        $orders = $this->orderModel->getByUser($userId);
+        
+        include VIEWS_PATH . '/admin/users/orders.php';
     }
 }

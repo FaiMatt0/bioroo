@@ -117,4 +117,48 @@ class Category {
         
         return $categories;
     }
+
+    /**
+     * Ottiene tutte le categorie con conteggio prodotti (per admin)
+     */
+    public function getAllWithProductCount() {
+        $stmt = $this->conn->prepare("
+            SELECT c.*, COUNT(p.id) as product_count 
+            FROM categories c 
+            LEFT JOIN products p ON c.id = p.category_id 
+            GROUP BY c.id 
+            ORDER BY c.name
+        ");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $categories = [];
+        while ($row = $result->fetch_assoc()) {
+            $categories[] = $row;
+        }
+        
+        return $categories;
+    }
+
+    /**
+     * Ottiene una categoria per ID con conteggio prodotti
+     */
+    public function getByIdWithProductCount($id) {
+        $stmt = $this->conn->prepare("
+            SELECT c.*, COUNT(p.id) as product_count 
+            FROM categories c 
+            LEFT JOIN products p ON c.id = p.category_id 
+            WHERE c.id = ?
+            GROUP BY c.id
+        ");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            return $result->fetch_assoc();
+        }
+        
+        return false;
+    }
 }

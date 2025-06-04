@@ -84,3 +84,26 @@ function uploadImage($file, $destination) {
     }
     return false;
 }
+
+/**
+ * Aggiorna la sessione utente per usare il nuovo formato senza username
+ */
+function updateUserSession() {
+    if (isLoggedIn() && !isset($_SESSION['display_name']) && isset($_SESSION['user_id'])) {
+        // Carica il modello User
+        require_once MODELS_PATH . '/User.php';
+        $userModel = new User();
+        
+        // Ottieni l'utente dal database
+        $user = $userModel->getById($_SESSION['user_id']);
+        
+        if ($user) {
+            // Aggiorna la sessione con il nuovo formato
+            $_SESSION['display_name'] = $user['first_name'] . ' ' . $user['last_name'];
+            // Rimuovi l'username dalla sessione se presente
+            if (isset($_SESSION['username'])) {
+                unset($_SESSION['username']);
+            }
+        }
+    }
+}

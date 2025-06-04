@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../../config/config.php';
+}
+
 $pageTitle = 'Gestione Ordini';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -52,11 +57,10 @@ include VIEWS_PATH . '/layouts/header.php';
                     
                     foreach ($orders as $order): 
                         // Ottieni informazioni pagamento
-                        $payment = $order['payment_id'] ? $paymentModel->getById($order['payment_id']) : null;
-                    ?>
+                        $payment = $order['payment_id'] ? $paymentModel->getById($order['payment_id']) : null;                    ?>
                         <tr>
                             <td>#<?= $order['id'] ?></td>
-                            <td><?= $order['username'] ?></td>
+                            <td><?= $order['customer_name'] ?></td>
                             <td><?= date('d/m/Y H:i', strtotime($order['created_at'])) ?></td>
                             <td><?= formatPrice($order['total_amount']) ?></td>
                             <td>

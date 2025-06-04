@@ -146,8 +146,7 @@ class PaymentController {
             setFlashMessage('error', 'Pagamento non trovato.');
             redirect('/orders');
         }
-        
-        $order = $this->orderModel->getById($payment['order_id']);
+          $order = $this->orderModel->getById($payment['order_id']);
         
         // Verifica che l'ordine appartenga all'utente corrente o che l'utente sia admin
         if (!$order || ($order['user_id'] != $_SESSION['user_id'] && !isAdmin())) {

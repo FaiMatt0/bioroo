@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Dettagli Ordine #' . $order['id'];
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -201,8 +206,7 @@ include VIEWS_PATH . '/layouts/header.php';
                 </ul>
             </div>
         </div>
-        
-        <?php if ($order['status'] === 'shipped'): ?>
+          <?php if ($order['status'] === 'shipped'): ?>
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">Informazioni di spedizione</h5>
@@ -214,6 +218,94 @@ include VIEWS_PATH . '/layouts/header.php';
                     <a href="#" class="btn btn-outline-primary">
                         <i class="fas fa-truck me-2"></i> Traccia spedizione
                     </a>
+                </div>
+            </div>
+        <?php endif; ?>
+        
+        <?php if ($order['status'] === 'delivered'): ?>
+            <?php
+            // Check if order can be returned (within 30 days)
+            $deliveryDate = strtotime($order['updated_at']);
+            $daysSinceDelivery = (time() - $deliveryDate) / (60 * 60 * 24);
+            $canReturn = $daysSinceDelivery <= 30;
+            
+            // Check if return already exists
+            require_once MODELS_PATH . '/ReturnModel.php';
+            $returnModel = new ReturnModel();
+            $existingReturns = $returnModel->getReturnsByOrder($order['id']);
+            $hasActiveReturn = false;
+            foreach ($existingReturns as $return) {
+                if (!in_array($return['status'], ['rejected', 'cancelled'])) {
+                    $hasActiveReturn = true;
+                    break;
+                }
+            }
+            ?>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Gestione Reso</h5>
+                </div>
+                <div class="card-body">
+                    <?php if ($hasActiveReturn): ?>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Hai già una richiesta di reso attiva per questo ordine.
+                        </div>
+                        <a href="<?= BASE_URL ?>/returns" class="btn btn-primary">
+                            <i class="fas fa-undo me-2"></i> Visualizza Resi
+                        </a>
+                    <?php elseif ($canReturn): ?>
+                        <p>Non sei soddisfatto del tuo ordine? Puoi richiedere un reso entro 30 giorni dalla consegna.</p>
+                        <p><small class="text-muted">Giorni rimanenti per il reso: <?= max(0, 30 - floor($daysSinceDelivery)) ?></small></p>
+                        <a href="<?= BASE_URL ?>/returns/create/<?= $order['id'] ?>" class="btn btn-warning">
+                            <i class="fas fa-undo me-2"></i> Richiedi Reso
+                        </a>
+                    <?php else: ?>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Il periodo per richiedere un reso (30 giorni) è scaduto.
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($existingReturns)): ?>
+                        <div class="mt-3">
+                            <h6>Storico Resi</h6>
+                            <?php foreach ($existingReturns as $return): ?>
+                                <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                    <div>
+                                        <strong>Reso #<?= $return['id'] ?></strong>
+                                        <br><small class="text-muted"><?= date('d/m/Y', strtotime($return['created_at'])) ?></small>
+                                    </div>
+                                    <div class="text-end">
+                                        <?php
+                                        $statusClass = [
+                                            'requested' => 'warning',
+                                            'approved' => 'info', 
+                                            'rejected' => 'danger',
+                                            'received' => 'primary',
+                                            'refunded' => 'success',
+                                            'cancelled' => 'secondary'
+                                        ];
+                                        $statusText = [
+                                            'requested' => 'Richiesto',
+                                            'approved' => 'Approvato',
+                                            'rejected' => 'Rifiutato', 
+                                            'received' => 'Ricevuto',
+                                            'refunded' => 'Rimborsato',
+                                            'cancelled' => 'Annullato'
+                                        ];
+                                        ?>
+                                        <span class="badge bg-<?= $statusClass[$return['status']] ?> d-block mb-1">
+                                            <?= $statusText[$return['status']] ?>
+                                        </span>
+                                        <a href="<?= BASE_URL ?>/returns/view/<?= $return['id'] ?>" class="btn btn-sm btn-outline-primary">
+                                            Dettagli
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>

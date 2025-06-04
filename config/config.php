@@ -4,7 +4,7 @@ session_start();
 
 // URL base del sito - Make sure this is correct for your server setup
 // No trailing slash!
-define('BASE_URL', 'http://localhost/bioro/views');
+define('BASE_URL', 'http://localhost/bioro');
 
 // Directory del progetto
 define('ROOT_PATH', dirname(__DIR__));
@@ -28,6 +28,11 @@ define('SMTP_PORT', 587);
 require_once 'database.php';
 require_once ROOT_PATH . '/utils/helpers.php';
 require_once ROOT_PATH . '/utils/validator.php';
+
+// Aggiorna la sessione utente per usare il nuovo formato senza username
+if (isset($_SESSION['user_id'])) {
+    updateUserSession();
+}
 
 // Gestione errori
 error_reporting(E_ALL);

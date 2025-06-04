@@ -313,4 +313,248 @@ class ProductController {
         
         redirect('/products');
     }
+    
+    // =============================================================
+    // ADMIN METHODS
+    // =============================================================
+    
+    /**
+     * Admin: Mostra tutti i prodotti
+     */
+    public function adminIndex() {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        $products = $this->productModel->getAll();
+        
+        include VIEWS_PATH . '/admin/products/index.php';
+    }
+    
+    /**
+     * Admin: Mostra form per aggiungere un prodotto
+     */
+    public function adminCreate() {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        $categories = $this->categoryModel->getAll();
+        
+        include VIEWS_PATH . '/admin/products/create.php';
+    }
+    
+    /**
+     * Admin: Salva un nuovo prodotto
+     */
+    public function adminStore() {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = sanitize($_POST['name']);
+            $description = sanitize($_POST['description']);
+            $price = (float)$_POST['price'];
+            $stockQuantity = (int)$_POST['stock_quantity'];
+            $categoryId = (int)$_POST['category_id'];
+            $status = sanitize($_POST['status'] ?? 'active');
+            
+            // Validazione
+            $errors = [];
+            
+            if (!validateRequired($name)) {
+                $errors['name'] = "Nome prodotto richiesto";
+            }
+            
+            if (!validatePrice($price)) {
+                $errors['price'] = "Prezzo non valido";
+            }
+            
+            if (!validatePositiveInt($stockQuantity)) {
+                $errors['stock_quantity'] = "Quantità non valida";
+            }
+            
+            // Gestione upload immagine
+            $image = 'default.jpg'; // Immagine predefinita
+            
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = UPLOADS_PATH . '/products/';
+                $image = uploadImage($_FILES['image'], $uploadDir);
+                
+                if (!$image) {
+                    $errors['image'] = "Errore durante l'upload dell'immagine";
+                }
+            }
+            
+            // Se non ci sono errori, crea il prodotto
+            if (empty($errors)) {
+                $productData = [
+                    'name' => $name,
+                    'description' => $description,
+                    'price' => $price,
+                    'stock_quantity' => $stockQuantity,
+                    'category_id' => $categoryId,
+                    'user_id' => $_SESSION['user_id'], // Admin user
+                    'image' => $image,
+                    'status' => $status
+                ];
+                
+                $productId = $this->productModel->create($productData);
+                
+                if ($productId) {
+                    setFlashMessage('success', 'Prodotto aggiunto con successo!');
+                    redirect('/admin/products');
+                } else {
+                    $errors['create'] = "Errore durante la creazione del prodotto";
+                }
+            }
+            
+            // Se ci sono errori, mostra di nuovo il form
+            $categories = $this->categoryModel->getAll();
+            include VIEWS_PATH . '/admin/products/create.php';
+        } else {
+            redirect('/admin/products/create');
+        }
+    }
+    
+    /**
+     * Admin: Mostra form per modificare un prodotto
+     */
+    public function adminEdit($productId) {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        $product = $this->productModel->getById($productId);
+        
+        if (!$product) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        $categories = $this->categoryModel->getAll();
+        
+        include VIEWS_PATH . '/admin/products/edit.php';
+    }
+    
+    /**
+     * Admin: Aggiorna un prodotto
+     */
+    public function adminUpdate($productId) {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        $product = $this->productModel->getById($productId);
+        
+        if (!$product) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = sanitize($_POST['name']);
+            $description = sanitize($_POST['description']);
+            $price = (float)$_POST['price'];
+            $stockQuantity = (int)$_POST['stock_quantity'];
+            $categoryId = (int)$_POST['category_id'];
+            $status = sanitize($_POST['status'] ?? 'active');
+            
+            // Validazione
+            $errors = [];
+            
+            if (!validateRequired($name)) {
+                $errors['name'] = "Nome prodotto richiesto";
+            }
+            
+            if (!validatePrice($price)) {
+                $errors['price'] = "Prezzo non valido";
+            }
+            
+            if (!validatePositiveInt($stockQuantity)) {
+                $errors['stock_quantity'] = "Quantità non valida";
+            }
+            
+            // Dati da aggiornare
+            $productData = [
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'stock_quantity' => $stockQuantity,
+                'category_id' => $categoryId,
+                'status' => $status
+            ];
+            
+            // Gestione upload immagine
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = UPLOADS_PATH . '/products/';
+                $image = uploadImage($_FILES['image'], $uploadDir);
+                
+                if ($image) {
+                    $productData['image'] = $image;
+                } else {
+                    $errors['image'] = "Errore durante l'upload dell'immagine";
+                }
+            }
+            
+            // Se non ci sono errori, aggiorna il prodotto
+            if (empty($errors)) {
+                $updated = $this->productModel->update($productId, $productData);
+                
+                if ($updated) {
+                    setFlashMessage('success', 'Prodotto aggiornato con successo!');
+                    redirect('/admin/products');
+                } else {
+                    $errors['update'] = "Errore durante l'aggiornamento del prodotto";
+                }
+            }
+            
+            // Se ci sono errori, mostra di nuovo il form
+            $categories = $this->categoryModel->getAll();
+            include VIEWS_PATH . '/admin/products/edit.php';
+        } else {
+            redirect('/admin/products/edit/' . $productId);
+        }
+    }
+    
+    /**
+     * Admin: Elimina un prodotto
+     */
+    public function adminDelete($productId) {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono accedere a questa sezione.');
+            redirect('/');
+        }
+        
+        $product = $this->productModel->getById($productId);
+        
+        if (!$product) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        // Elimina il prodotto
+        if ($this->productModel->delete($productId)) {
+            setFlashMessage('success', 'Prodotto eliminato con successo!');
+        } else {
+            setFlashMessage('error', 'Errore durante l\'eliminazione del prodotto.');
+        }
+        
+        redirect('/admin/products');
+    }
 }

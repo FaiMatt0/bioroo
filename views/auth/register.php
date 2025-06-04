@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Registrazione';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -9,26 +14,24 @@ include VIEWS_PATH . '/layouts/header.php';
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Crea un nuovo account</h4>
             </div>
-            <div class="card-body">
-                <?php if (isset($errors['register'])): ?>
+            <div class="card-body">                <?php if (isset($errors['register'])): ?>
                     <div class="alert alert-danger"><?= $errors['register'] ?></div>
                 <?php endif; ?>
                 
-                <form action="<?= BASE_URL ?>/register" method="POST">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>" id="username" name="username" value="<?= isset($_POST['username']) ? sanitize($_POST['username']) : '' ?>" required>
-                            <?php if (isset($errors['username'])): ?>
-                                <div class="invalid-feedback"><?= $errors['username'] ?></div>
-                            <?php endif; ?>
-                        </div>
-                        
+                <form action="<?= BASE_URL ?>/auth/register" method="POST">                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" id="email" name="email" value="<?= isset($_POST['email']) ? sanitize($_POST['email']) : '' ?>" required>
                             <?php if (isset($errors['email'])): ?>
                                 <div class="invalid-feedback"><?= $errors['email'] ?></div>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Numero di telefono</label>
+                            <input type="tel" class="form-control <?= isset($errors['phone']) ? 'is-invalid' : '' ?>" id="phone" name="phone" value="<?= isset($_POST['phone']) ? sanitize($_POST['phone']) : '' ?>" required>
+                            <?php if (isset($errors['phone'])): ?>
+                                <div class="invalid-feedback"><?= $errors['phone'] ?></div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -73,9 +76,8 @@ include VIEWS_PATH . '/layouts/header.php';
                         <button type="submit" class="btn btn-primary">Registrati</button>
                     </div>
                 </form>
-                
-                <div class="mt-3 text-center">
-                    <p>Hai già un account? <a href="<?= BASE_URL ?>/login">Accedi</a></p>
+                  <div class="mt-3 text-center">
+                    <p>Hai già un account? <a href="<?= BASE_URL ?>/auth/login">Accedi</a></p>
                 </div>
             </div>
         </div>

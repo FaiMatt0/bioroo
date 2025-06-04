@@ -56,7 +56,7 @@ CREATE TABLE orders (
     shipping_city VARCHAR(50) NOT NULL,
     shipping_postal_code VARCHAR(20) NOT NULL,
     shipping_country VARCHAR(50) NOT NULL,
-    payment_id INT,
+    payment_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -103,7 +103,55 @@ CREATE TABLE reviews (
     user_id INT NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Aggiungi foreign key per payment_id nella tabella orders
+ALTER TABLE orders
+ADD CONSTRAINT fk_orders_payment
+FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE SET NULL;
+
+-- Tabella returns (resi)
+CREATE TABLE returns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    user_id INT NOT NULL,
+    return_number VARCHAR(50) NOT NULL UNIQUE,
+    reason ENUM('defective', 'wrong_item', 'not_as_described', 'changed_mind', 'damaged_shipping', 'other') NOT NULL,
+    reason_description TEXT,
+    status ENUM('requested', 'approved', 'rejected', 'received', 'refunded', 'cancelled') DEFAULT 'requested',
+    total_amount DECIMAL(10,2) NOT NULL,
+    refund_method ENUM('original_payment', 'store_credit', 'bank_transfer') DEFAULT 'original_payment',
+    admin_notes TEXT,
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP NULL,
+    refunded_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabella return_items (prodotti nel reso)
+CREATE TABLE return_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    return_id INT NOT NULL,
+    order_item_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    condition_received ENUM('new', 'good', 'fair', 'poor', 'damaged') NULL,
+    notes TEXT,
+    FOREIGN KEY (return_id) REFERENCES returns(id) ON DELETE CASCADE,
+    FOREIGN KEY (order_item_id) REFERENCES order_items(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Indici per migliorare le performance
+CREATE INDEX idx_returns_user_id ON returns(user_id);
+CREATE INDEX idx_returns_order_id ON returns(order_id);
+CREATE INDEX idx_returns_status ON returns(status);
+CREATE INDEX idx_returns_return_number ON returns(return_number);
+CREATE INDEX idx_return_items_return_id ON return_items(return_id);
+CREATE INDEX idx_return_items_product_id ON return_items(product_id);

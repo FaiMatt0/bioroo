@@ -2,8 +2,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Set the base directory 
-    RewriteBase /
+    # Set the base directory to the application root
+    # You may need to adjust this if you're not in the domain root
+    RewriteBase /bioro/
     
     # Allow direct access to the assets folder
     RewriteRule ^assets/ - [L]

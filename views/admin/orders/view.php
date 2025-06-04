@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../../config/config.php';
+}
+
 $pageTitle = 'Dettagli Ordine';
 include VIEWS_PATH . '/layouts/header.php';
 
@@ -53,10 +58,9 @@ $payment = $order['payment_id'] ? $paymentModel->getById($order['payment_id']) :
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <h6>Informazioni ordine</h6>
-                        <p>
+                        <h6>Informazioni ordine</h6>                        <p>
                             <strong>Data:</strong> <?= date('d/m/Y H:i', strtotime($order['created_at'])) ?><br>
-                            <strong>Cliente:</strong> <?= $order['username'] ?> (<?= $order['email'] ?>)<br>
+                            <strong>Cliente:</strong> <?= $order['customer_name'] ?> (<?= $order['email'] ?>)<br>
                             <strong>Stato:</strong> 
                             <?php
                             switch ($order['status']) {

@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Prodotti';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -7,13 +12,20 @@ include VIEWS_PATH . '/layouts/header.php';
 
 <div class="row">
     <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+        <div class="card mb-4">            <div class="card-header bg-primary text-white">
                 <h5 class="card-title mb-0">Categorie</h5>
             </div>
             <div class="card-body">
                 <ul class="list-group">
-                    <?php foreach ($categories as $category): ?>
+                    <?php 
+                    // Inizializza $categories se non è già definito
+                    if (!isset($categories)) {
+                        require_once MODELS_PATH . '/Category.php';
+                        $categoryModel = new Category();
+                        $categories = $categoryModel->getAll();
+                    }
+                    
+                    foreach ($categories as $category): ?>
                         <li class="list-group-item">
                             <a href="<?= BASE_URL ?>/products/category/<?= $category['id'] ?>" class="text-decoration-none">
                                 <?= $category['name'] ?>
@@ -24,10 +36,17 @@ include VIEWS_PATH . '/layouts/header.php';
             </div>
         </div>
     </div>
-    
-    <div class="col-md-9">
+      <div class="col-md-9">
         <div class="row">
-            <?php if (empty($products)): ?>
+            <?php 
+            // Inizializza $products se non è già definito
+            if (!isset($products)) {
+                require_once MODELS_PATH . '/Product.php';
+                $productModel = new Product();
+                $products = $productModel->getAll(12); // Limita a 12 prodotti
+            }
+            
+            if (empty($products)): ?>
                 <div class="col-12">
                     <div class="alert alert-info">
                         <p>Nessun prodotto disponibile al momento.</p>

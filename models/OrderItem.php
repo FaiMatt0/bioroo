@@ -29,6 +29,13 @@ class OrderItem {
     }
     
     /**
+     * Ottiene tutti gli elementi di un ordine (alias per retrocompatibilità)
+     */
+    public function getByOrderId($orderId) {
+        return $this->getByOrder($orderId);
+    }
+    
+    /**
      * Crea un nuovo elemento dell'ordine
      */
     public function create($data) {

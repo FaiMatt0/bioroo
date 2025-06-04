@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Errore del server';
 include VIEWS_PATH . '/layouts/header.php';
 ?>

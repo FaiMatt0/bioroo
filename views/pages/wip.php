@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Work in Progress';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -78,7 +83,7 @@ include VIEWS_PATH . '/layouts/header.php';
             </div>
             
             <div class="mt-5">
-                <a href="<?= BASE_URL ?>/" class="btn btn-lg btn-outline-primary">Torna alla Home</a>
+                <a href="<?= BASE_URL ?>/view/pages" class="btn btn-lg btn-outline-primary">Torna alla Home</a>
             </div>
         </div>
     </div>

@@ -68,6 +68,23 @@
         bottom: 50px;
     }
     
+    /* Stile per caption mobile */
+    .carousel-caption-mobile {
+        position: absolute;
+        right: 0;
+        bottom: 30px;
+        left: 0;
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        text-align: center;
+    }
+
+    .carousel-caption-mobile .btn {
+        margin: 0 auto;
+        display: inline-block;
+    }
+    
     .product-card .card-img-top {
         height: 150px;
     }

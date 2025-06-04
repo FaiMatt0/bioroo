@@ -4,6 +4,7 @@ require_once MODELS_PATH . '/OrderItem.php';
 require_once MODELS_PATH . '/Cart.php';
 require_once MODELS_PATH . '/Product.php';
 require_once MODELS_PATH . '/User.php';
+require_once MODELS_PATH . '/Payment.php';
 
 class OrderController {
     private $orderModel;
@@ -11,6 +12,7 @@ class OrderController {
     private $cartModel;
     private $productModel;
     private $userModel;
+    private $paymentModel;
     
     public function __construct() {
         $this->orderModel = new Order();
@@ -18,6 +20,7 @@ class OrderController {
         $this->cartModel = new Cart();
         $this->productModel = new Product();
         $this->userModel = new User();
+        $this->paymentModel = new Payment();
     }
     
     /**
@@ -246,5 +249,78 @@ class OrderController {
         } else {
             redirect('/admin/orders');
         }
+    }
+    
+    /**
+     * Admin: Mostra dettagli di un ordine
+     */
+    public function adminShow($orderId) {
+        // Verifica se l'utente è un admin
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono visualizzare i dettagli degli ordini.');
+            redirect('/');
+        }
+        
+        $order = $this->orderModel->getById($orderId);
+        
+        if (!$order) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        // Ottieni gli elementi dell'ordine
+        $orderItems = $this->orderItemModel->getByOrder($orderId);
+        
+        // Ottieni informazioni pagamento se presente
+        $payment = null;
+        if ($order['payment_id']) {
+            $payment = $this->paymentModel->getById($order['payment_id']);
+        }
+        
+        include VIEWS_PATH . '/admin/orders/view.php';
+    }
+    
+    /**
+     * Admin: Mostra solo gli ordini in attesa
+     */
+    public function pending() {
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono visualizzare gli ordini in attesa.');
+            redirect('/');
+        }
+        
+        // Reindirizza alla gestione ordini con filtro pending
+        redirect('/admin/orders?status=pending');
+    }
+    
+    /**
+     * Admin: Genera fattura per un ordine
+     */
+    public function invoice($orderId) {
+        if (!isLoggedIn() || !isAdmin()) {
+            setFlashMessage('error', 'Accesso negato. Solo gli amministratori possono generare fatture.');
+            redirect('/');
+        }
+        
+        $order = $this->orderModel->getById($orderId);
+        
+        if (!$order) {
+            http_response_code(404);
+            include VIEWS_PATH . '/errors/404.php';
+            return;
+        }
+        
+        // Ottieni gli elementi dell'ordine
+        $orderItems = $this->orderItemModel->getByOrder($orderId);
+        
+        // Ottieni informazioni pagamento se presente
+        $payment = null;
+        if ($order['payment_id']) {
+            $payment = $this->paymentModel->getById($order['payment_id']);
+        }
+        
+        // Genera e mostra la fattura
+        include VIEWS_PATH . '/admin/orders/invoice.php';
     }
 }

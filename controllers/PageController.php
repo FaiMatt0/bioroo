@@ -16,7 +16,7 @@ class PageController {
         $mainCategories = $categoryModel->getMain();
         
         $pageType = 'home';
-        include VIEWS_PATH . '/pages/home.php';
+        include VIEWS_PATH . '/pages/index.php';
     }
     
     /**

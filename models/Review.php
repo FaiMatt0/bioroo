@@ -5,13 +5,12 @@ class Review {
     public function __construct() {
         $this->conn = getDBConnection();
     }
-    
-    /**
+      /**
      * Ottiene tutte le recensioni per un prodotto
      */
     public function getByProduct($productId) {
         $stmt = $this->conn->prepare("
-            SELECT r.*, u.username 
+            SELECT r.*, CONCAT(u.first_name, ' ', u.last_name) as reviewer_name 
             FROM reviews r 
             JOIN users u ON r.user_id = u.id 
             WHERE r.product_id = ? 

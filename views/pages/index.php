@@ -1,4 +1,9 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Home';
 include VIEWS_PATH . '/layouts/header.php';
 ?>
@@ -11,13 +16,16 @@ include VIEWS_PATH . '/layouts/header.php';
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
         </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
+        <div class="carousel-inner">            <div class="carousel-item active">
                 <img src="<?= BASE_URL ?>/assets/images/hero/slide1.jpg" class="d-block w-100" alt="Benvenuti nel nostro marketplace">
                 <div class="carousel-caption d-none d-md-block">
                     <h1>Benvenuti nel nostro Marketplace</h1>
                     <p>Scopri prodotti di qualità selezionati per te</p>
                     <a href="<?= BASE_URL ?>/products" class="btn btn-primary btn-lg">Esplora prodotti</a>
+                </div>
+                <!-- Caption per dispositivi mobili -->
+                <div class="carousel-caption-mobile d-md-none">
+                    <a href="<?= BASE_URL ?>/products" class="btn btn-primary">Esplora prodotti</a>
                 </div>
             </div>
             <div class="carousel-item">
@@ -27,6 +35,10 @@ include VIEWS_PATH . '/layouts/header.php';
                     <p>Scopri le nostre ultime novità</p>
                     <a href="<?= BASE_URL ?>/products" class="btn btn-primary btn-lg">Scopri di più</a>
                 </div>
+                <!-- Caption per dispositivi mobili -->
+                <div class="carousel-caption-mobile d-md-none">
+                    <a href="<?= BASE_URL ?>/products" class="btn btn-primary">Scopri di più</a>
+                </div>
             </div>
             <div class="carousel-item">
                 <img src="<?= BASE_URL ?>/assets/images/hero/slide3.jpg" class="d-block w-100" alt="Offerte speciali">
@@ -34,6 +46,10 @@ include VIEWS_PATH . '/layouts/header.php';
                     <h1>Offerte speciali</h1>
                     <p>Approfitta delle nostre promozioni</p>
                     <a href="<?= BASE_URL ?>/products" class="btn btn-primary btn-lg">Scopri le offerte</a>
+                </div>
+                <!-- Caption per dispositivi mobili -->
+                <div class="carousel-caption-mobile d-md-none">
+                    <a href="<?= BASE_URL ?>/products" class="btn btn-primary">Scopri le offerte</a>
                 </div>
             </div>
         </div>

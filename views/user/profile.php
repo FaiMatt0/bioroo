@@ -1,6 +1,11 @@
 <?php
+if (!defined('VIEWS_PATH')) {
+    // Load config when accessed directly
+    require_once '../../config/config.php';
+}
+
 $pageTitle = 'Il mio profilo';
-include VIEWS_PATH . '/layouts/header.php';
+include VIEWS_PATH . '../layouts/header.php';
 ?>
 
 <div class="row">
@@ -8,12 +13,9 @@ include VIEWS_PATH . '/layouts/header.php';
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Informazioni profilo</h5>
-            </div>
-            <div class="card-body">
+            </div>            <div class="card-body">
                 <div class="text-center mb-4">
-                    <img src="https://via.placeholder.com/150" alt="Foto profilo" class="rounded-circle img-thumbnail">
                     <h4 class="mt-3"><?= $user['first_name'] . ' ' . $user['last_name'] ?></h4>
-                    <p class="text-muted">@<?= $user['username'] ?></p>
                     
                     <?php if (isAdmin()): ?>
                         <span class="badge bg-danger">Amministratore</span>

@@ -34,53 +34,58 @@ if (empty($request_uri)) {
 // echo "Processed URI: $request_uri<br>";
 // exit;
 
-// Routing semplice basato sulla struttura delle cartelle
+// Routing configuration based on the structure of controllers
 $routes = [
-    // Pagine principali
-    '/pages' => ['PageController', 'index'],
+    // Main pages
+    '/' => ['PageController', 'index'],
     '/pages/about' => ['PageController', 'about'],
     '/pages/contact' => ['PageController', 'contact'],
-    '/pages/contact/send' => ['PageController', 'sendContact'],
+    '/contact/send' => ['PageController', 'sendContact'],
     '/pages/sustainability' => ['PageController', 'sustainability'],
     '/pages/wip' => ['PageController', 'wip'],
     
-    // Autenticazione
+    // Authentication
     '/auth/login' => ['AuthController', 'login'],
     '/auth/register' => ['AuthController', 'register'],
     '/auth/logout' => ['AuthController', 'logout'],
     
-    // Prodotti
+    // Products
     '/products' => ['ProductController', 'index'],
     '/products/category/(\d+)' => ['ProductController', 'category'],
     '/products/(\d+)' => ['ProductController', 'show'],
     '/products/search' => ['ProductController', 'search'],
     
-    // Carrello
+    // Cart
     '/cart' => ['CartController', 'index'],
     '/cart/add' => ['CartController', 'add'],
     '/cart/update' => ['CartController', 'update'],
     '/cart/remove' => ['CartController', 'remove'],
     '/cart/clear' => ['CartController', 'clear'],
     
-    // Checkout e pagamento
+    // Checkout and payment
     '/checkout' => ['OrderController', 'checkout'],
     '/order/process' => ['OrderController', 'process'],
     '/payment' => ['PaymentController', 'index'],
     '/payment/process' => ['PaymentController', 'process'],
     
-    // Profilo utente
+    // User profile
     '/profile' => ['UserController', 'profile'],
     '/profile/edit' => ['UserController', 'edit'],
     '/profile/update' => ['UserController', 'update'],
     '/profile/change-password' => ['UserController', 'changePasswordForm'],
     '/profile/change-password-process' => ['UserController', 'changePassword'],
-    
-    // Ordini
+      // Orders
     '/orders' => ['OrderController', 'myOrders'],
     '/orders/(\d+)' => ['OrderController', 'show'],
     
+    // Returns (Resi)
+    '/returns' => ['ReturnController', 'myReturns'],
+    '/returns/create/(\d+)' => ['ReturnController', 'create'],
+    '/returns/store' => ['ReturnController', 'store'],
+    '/returns/view/(\d+)' => ['ReturnController', 'view'],    '/returns/cancel/(\d+)' => ['ReturnController', 'cancel'],
+    
     // Admin
-    '/admin' => ['UserController', 'adminDashboard'],
+    '/admin' => ['AdminController', 'dashboard'],
     '/admin/products' => ['ProductController', 'adminIndex'],
     '/admin/products/create' => ['ProductController', 'adminCreate'],
     '/admin/products/store' => ['ProductController', 'adminStore'],
@@ -89,28 +94,31 @@ $routes = [
     '/admin/products/delete/(\d+)' => ['ProductController', 'adminDelete'],
     '/admin/orders' => ['OrderController', 'index'],
     '/admin/orders/(\d+)' => ['OrderController', 'adminShow'],
+    '/admin/orders/pending' => ['OrderController', 'pending'],
     '/admin/orders/update-status/(\d+)' => ['OrderController', 'updateStatus'],
+    '/admin/orders/invoice/(\d+)' => ['OrderController', 'invoice'],
     '/admin/users' => ['UserController', 'manageUsers'],
     '/admin/users/change-role' => ['UserController', 'changeRole'],
+    '/admin/users/view/(\d+)' => ['UserController', 'viewUser'],
+    '/admin/users/orders/(\d+)' => ['UserController', 'userOrders'],
+    '/admin/categories' => ['CategoryController', 'adminIndex'],
+    '/admin/categories/create' => ['CategoryController', 'adminCreate'],
+    '/admin/categories/store' => ['CategoryController', 'adminStore'],
+    '/admin/categories/edit/(\d+)' => ['CategoryController', 'adminEdit'],    '/admin/categories/update/(\d+)' => ['CategoryController', 'adminUpdate'],
+    '/admin/categories/delete/(\d+)' => ['CategoryController', 'adminDelete'],
+    '/admin/reports' => ['ReportController', 'index'],
+    '/admin/reports/export' => ['ReportController', 'export'],
+    
+    // Admin Returns
+    '/admin/returns' => ['ReturnController', 'adminIndex'],
+    '/admin/returns/view/(\d+)' => ['ReturnController', 'adminShow'],
+    '/admin/returns/(\d+)' => ['ReturnController', 'adminShow'],
+    '/admin/returns/(\d+)/status' => ['ReturnController', 'updateStatusAjax'],
+    '/admin/returns/(\d+)/notes' => ['ReturnController', 'updateNotesAjax'],
+    '/admin/returns/update-status' => ['ReturnController', 'updateStatus'],
+    '/admin/returns/update-conditions' => ['ReturnController', 'updateItemConditions'],
+    '/admin/returns/pending' => ['ReturnController', 'getPendingReturns'],
 ];
-
-// Aggiungi anche per accesso diretto alle view - per compatibilità
-$direct_routes = [
-    '/views/pages/about' => ['PageController', 'about'],
-    '/views/pages/contact' => ['PageController', 'contact'],
-    '/views/pages/sustainability' => ['PageController', 'sustainability'],
-    '/views/pages/wip' => ['PageController', 'wip'],
-    '/views/products' => ['ProductController', 'index'],
-    '/views/products/category/(\d+)' => ['ProductController', 'category'],
-    '/views/products/(\d+)' => ['ProductController', 'show'],
-    '/views/products/search' => ['ProductController', 'search'],
-    '/views/cart' => ['CartController', 'index'],
-    '/views/auth/login' => ['AuthController', 'login'],
-    '/views/auth/register' => ['AuthController', 'register'],
-];
-
-// Combina le routes
-$all_routes = array_merge($routes, $direct_routes);
 
 // Funzione per gestire il routing
 function handleRoute($routes, $uri) {
@@ -160,13 +168,12 @@ function handleRoute($routes, $uri) {
             }
         }
     }
-    
-    // No route found
+      // No route found
     // echo "No matching route found for URI: " . $uri . "<br>";
     http_response_code(404);
     include VIEWS_PATH . '/errors/404.php';
     return false;
 }
 
-// Gestisci la richiesta con tutte le routes combinate
-handleRoute($all_routes, $request_uri);
+// Gestisci la richiesta con le routes
+handleRoute($routes, $request_uri);
